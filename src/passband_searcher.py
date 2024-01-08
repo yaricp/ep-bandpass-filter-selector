@@ -1,5 +1,5 @@
-from itertool import combinations
 import numpy as np
+from itertools import combinations
 
 from eeg_filters.filters import make_filter, search_max_min
 
@@ -98,7 +98,7 @@ class PassbandSearcher:
             )
             filtered_curves.append(filtered_curve)
         return filtered_curves
-    
+
     def start(self) -> tuple:
         """
         Starts main circle
