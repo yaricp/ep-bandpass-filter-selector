@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "eeg-passband-searcher"
+version = "0.1.0"
+description = ""
+authors = ["Yaroslav Pisarev <yaricp@gmail.com>"]
+license = "ISP"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
