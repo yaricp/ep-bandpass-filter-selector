@@ -1,13 +1,12 @@
 [tool.poetry]
-name = "eeg-passband-searcher"
+name = "ep-bandpass-filter-selector"
 version = "0.1.0"
 description = ""
-authors = ["Yaroslav Pisarev <yaricp@gmail.com>"]
-license = "ISP"
+authors = ["Yaricp Pisarev <yaricp@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = "^3.11.5"
 numpy = "^1.26.3"
 eeg-filters = "^0.0.7"
 

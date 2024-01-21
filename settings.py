@@ -1,0 +1,11 @@
+LFRL=5
+LFRH=30
+SLR=5
+HFRL=100
+HFRH=500
+SHR=50
+EXTREMUMS={
+    "max": (0.02, 0.03),
+    "min": (0.06, 0.07)
+}
+NUMBER_CURVES=[1,5,10,15,20,25]
