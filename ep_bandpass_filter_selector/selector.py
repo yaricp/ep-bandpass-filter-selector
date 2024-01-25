@@ -1,6 +1,7 @@
 import csv
 import numpy as np
 from itertools import combinations
+from loguru import logger
 
 from eeg_filters.filters import make_filter, search_max_min
 
@@ -68,7 +69,7 @@ class PassbandSelector:
             self.cheb_ripple = kwargs["cheb_ripple"]
         self.cheb_ripple = int(self.cheb_ripple)
         
-        print("TYPE: ", type(self.filter_low_limit_range[0]))
+        logger.info(f"TYPE: {type(self.filter_low_limit_range[0])}")
 
         self.filtered_curves = []
         self.filter_by_optimum = {}
@@ -89,7 +90,7 @@ class PassbandSelector:
         integrals = []
         for curve1, curve2 in combinations(filtered_curves, 2):
             integral = self.get_integral(curve1, curve2)
-            # print("integral:", integral)
+            # logger.info("integral: {integral}")
             integrals.append(integral)
 
         if self.type_mean == "average":
@@ -145,10 +146,10 @@ class PassbandSelector:
         """
         Starts main circle
         """
-        print(self.filter_low_limit_range)
-        print(self.step_low_filter)
-        print(self.filter_high_limit_range)
-        print(self.step_high_filter)
+        logger.info(self.filter_low_limit_range)
+        logger.info(self.step_low_filter)
+        logger.info(self.filter_high_limit_range)
+        logger.info(self.step_high_filter)
 
         heatmap_data = []
         head_row = []
@@ -164,7 +165,7 @@ class PassbandSelector:
                 self.filter_high_limit_range[1] + self.step_high_filter,
                 self.step_high_filter
             ):
-                # print("lb, hb:",lb, hb)
+                # logger.info("lb, hb: {lb, hb}",lb, hb)
                 if not head_row_created:
                     head_row.append(hb)
                 filtered_curves = self.filter_curves(lb, hb)

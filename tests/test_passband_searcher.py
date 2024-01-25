@@ -1,15 +1,26 @@
-from src.passband_searcher import PassbandSearcher
+import pytest
+from ep_bandpass_filter_selector import (
+    PassbandSelector, export_data
+)
 
 
-class TestPassBandSearcher:
-    pbs = PassbandSearcher(
+@pytest.fixture()
+def prepare_item_pbs():
+    """Fixture for create and delete PassbandSelector item."""
+    pbs = PassbandSelector(
+
+    )
+    yield pbs
+    print("something after test")
+
+
+class TestPassbandSelector:
+    pbs = PassbandSelector(
         curves=[],
-        filter_borders={"low":[0,0,1], "high": [0,0,1]},
         tick_times=[],
-        where_search_extremums=[],
-        check_average=True,
-        check_square=False,
-        config_filter={}
+        fsr=25,
+        max_search_range=(0.02, 0.03),
+        min_search_range=(0.05, 0.06),
     )
 
     def test_get_reproduct(self):
