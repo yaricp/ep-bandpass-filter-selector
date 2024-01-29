@@ -7,6 +7,9 @@ from eeg_filters.filters import make_filter, search_max_min
 
 
 class PassbandSelector:
+    """
+    Class to implement the selection of a bandpass filter.
+    """
 
     def __init__(
         self,
@@ -18,7 +21,7 @@ class PassbandSelector:
         **kwargs
     ) -> None:
         """
-        Initializations of process
+        Initialization of an item.
         """
         self.filter_low_limit_range = 1, 30
         self.step_low_filter = 1
@@ -75,24 +78,21 @@ class PassbandSelector:
         self.filter_by_optimum = {}
         self.optimums = []
         self.optimum_matrix = {}
-        self.delta = self.get_delta()
-
-    def get_delta(self):
-        """
-        Gets delta for integrals
-        """
-        return 10
 
     def get_reproduct(self, filtered_curves: list) -> float:
         """
-        Gets reproducibility of filtered curves
+        Calculates the average reproducibility of the filtered curves.
+
+        Parameters:
+            filtered_curves(list): List of filtered curves.
+
+        Returns:
+            (float): The average reproducibility.
         """
         integrals = []
         for curve1, curve2 in combinations(filtered_curves, 2):
             integral = self.get_integral(curve1, curve2)
-            # logger.info("integral: {integral}")
             integrals.append(integral)
-
         if self.type_mean == "average":
             ave_integral = sum(integrals) / len(integrals)
         # elif self.check_square:
@@ -101,7 +101,14 @@ class PassbandSelector:
 
     def get_delta_extremum(self, filtered_curves: list) -> float:
         """
-        Gets average delta extremums
+        Calculates the average difference in extrema for the list
+        of filtered curves.
+
+        Parameters:
+            filtered_curves(list): List of the filtered curves.
+
+        Returns:
+            (float): The average difference in extrema.
         """
         deltas = []
         for curve in filtered_curves:
@@ -120,15 +127,29 @@ class PassbandSelector:
             deltas.append(curve_max[1] - curve_min[1])
         return sum(deltas) / len(deltas)
 
-    def get_integral(self, curve1, curve2) -> float:
+    def get_integral(self, curve1: list, curve2: list) -> float:
         """
-        Gets integral abs difference of curves
+        Calculates the integral of the absolute difference of curves.
+
+        Parameters:
+            curve1(list): List of values from the first curve.
+            curve2(list): List of values from the second curve.
+
+        Returns:
+            (float): The value of the integral of the absolute difference.
         """
         return np.trapz(np.absolute(np.subtract(curve1, curve2)))
 
     def filter_curves(self, lb: int, hb: int) -> list:
         """
-        Filters curves
+        Filters curves using the eeg_filters library.
+
+        Parameters:
+            lb(int): The low border of the bandpass filter.
+            hb(int): The high border of the pandpass filter.
+
+        Returns:
+            (list): list of values from the filtered curve.
         """
         filtered_curves = []
         for curve in self.curves:
@@ -144,13 +165,8 @@ class PassbandSelector:
 
     def start(self) -> tuple:
         """
-        Starts main circle
+        Initiates the main process of selecting the optimal bandpass filter.
         """
-        logger.info(self.filter_low_limit_range)
-        logger.info(self.step_low_filter)
-        logger.info(self.filter_high_limit_range)
-        logger.info(self.step_high_filter)
-
         heatmap_data = []
         head_row = []
         head_row_created = False
@@ -165,7 +181,6 @@ class PassbandSelector:
                 self.filter_high_limit_range[1] + self.step_high_filter,
                 self.step_high_filter
             ):
-                # logger.info("lb, hb: {lb, hb}",lb, hb)
                 if not head_row_created:
                     head_row.append(hb)
                 filtered_curves = self.filter_curves(lb, hb)
@@ -189,7 +204,12 @@ def export_data(
     filepath: str, bandpass: list, data: list
 ) -> None:
     """
-    Saves Data to file
+    Exports data to file.
+
+    Parameters:
+        filepath(str): The path to the file for export data.
+        bandpass(list): List of values of the selected bandpass filter.
+        data(list): List of values of the optimality parameters.
     """
     with open(filepath, 'a', encoding='UTF8', newline='') as f:
         writer = csv.writer(f)
