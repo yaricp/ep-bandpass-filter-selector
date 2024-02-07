@@ -1,10 +1,6 @@
 # ep-bandpass-filter-selector
 
-Automatic selector of low and high borders by checking minimal different between curves of EEG potentials.
-An idea is to run in lists of low and high border of bandpass filter which using in eeg_filters and check minimal different between curves.
-For obtain the minimal difference used two numbers:
-1. average producibility of the curves
-2. average difference extrema of the curves
+The EP Bandpass Filter Selector package cycles through various combinations of high- and low-pass cutoffs of the bandpass frequency filter within user-specified limits and selects the optimal filtering option. Optimization is carried out basing on the ratio of the EP interpeak amplitude to the EP curves variability coefficient.
 
 
 ## Requirements

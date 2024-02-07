@@ -1,16 +1,16 @@
-import pytest
+# import pytest
 from loguru import logger
 
 from eeg_filters.upload import prepare_data
-from ep_bandpass_filter_selector import (
-    PassbandSelector, export_data
-)
+from ep_bandpass_filter_selector import PassbandSelector
+# , export_data
 
 
 class TestPassbandSelector:
     """
     Class for testing of PassbandSelector methods.
     """
+
     data_folder_path = "tests/data/"
     data_file_path = "tests/data/test_eeg_data.txt"
     pbs = PassbandSelector(
@@ -25,22 +25,14 @@ class TestPassbandSelector:
         """
         Tests calculating of the average integrals.
         """
-        self.pbs.tick_times = [1,2,3,4,5]
-        self.pbs.max_search_range = [0,5]
-        self.pbs.min_search_range = [0,5]
-        filtered_curves = [
-            [1,2,3,4,5],
-            [1,2,3,4,5],
-            [1,2,3,4,5]
-        ]
+        self.pbs.tick_times = [1, 2, 3, 4, 5]
+        self.pbs.max_search_range = [0, 5]
+        self.pbs.min_search_range = [0, 5]
+        filtered_curves = [[1, 2, 3, 4, 5], [1, 2, 3, 4, 5], [1, 2, 3, 4, 5]]
         result = self.pbs.get_reproduct(filtered_curves)
         assert result == 0.0
 
-        filtered_curves = [
-            [1,2,4,4,5],
-            [1,2,3,4,5],
-            [1,2,3,3,5]
-        ]
+        filtered_curves = [[1, 2, 4, 4, 5], [1, 2, 3, 4, 5], [1, 2, 3, 3, 5]]
         result = self.pbs.get_reproduct(filtered_curves)
         assert round(result, 2) == 1.33
 
@@ -48,23 +40,15 @@ class TestPassbandSelector:
         """
         Tests calculating the average difference extrema.
         """
-        self.pbs.tick_times = [1,2,3,4,5]
-        self.pbs.max_search_range = [0,5]
-        self.pbs.min_search_range = [0,5]
+        self.pbs.tick_times = [1, 2, 3, 4, 5]
+        self.pbs.max_search_range = [0, 5]
+        self.pbs.min_search_range = [0, 5]
 
-        filtered_curves = [
-            [1,1,2,0,1],
-            [0,0,-2,0,0],
-            [1,1,-1,1,1]
-        ]
+        filtered_curves = [[1, 1, 2, 0, 1], [0, 0, -2, 0, 0], [1, 1, -1, 1, 1]]
         result = self.pbs.get_delta_extremum(filtered_curves)
         assert result == 2.0
 
-        filtered_curves = [
-            [1,1,2,0,1],
-            [1,2,4,0,1],
-            [1,2,6,0,1]
-        ]
+        filtered_curves = [[1, 1, 2, 0, 1], [1, 2, 4, 0, 1], [1, 2, 6, 0, 1]]
         result = self.pbs.get_delta_extremum(filtered_curves)
         assert result == 4.0
 
@@ -72,33 +56,33 @@ class TestPassbandSelector:
         """
         Tests calculating of the integrals.
         """
-        curve1 = [1,1,1]
-        curve2 = [1,1,1]
-        assert self.pbs.get_integral(curve1,curve2) == 0.0
+        curve1 = [1, 1, 1]
+        curve2 = [1, 1, 1]
+        assert self.pbs.get_integral(curve1, curve2) == 0.0
 
-        curve1 = [1,1,1]
-        curve2 = [1,2,1]
-        assert self.pbs.get_integral(curve1,curve2) == 1.0
+        curve1 = [1, 1, 1]
+        curve2 = [1, 2, 1]
+        assert self.pbs.get_integral(curve1, curve2) == 1.0
 
-        curve1 = [1,1,1]
-        curve2 = [1,2,2]
-        assert self.pbs.get_integral(curve1,curve2) == 1.5
+        curve1 = [1, 1, 1]
+        curve2 = [1, 2, 2]
+        assert self.pbs.get_integral(curve1, curve2) == 1.5
 
-        curve1 = [1,1,1]
-        curve2 = [1,2,3]
-        assert self.pbs.get_integral(curve1,curve2) == 2.0
+        curve1 = [1, 1, 1]
+        curve2 = [1, 2, 3]
+        assert self.pbs.get_integral(curve1, curve2) == 2.0
 
-        curve1 = [1,1,1]
-        curve2 = [1,0,1]
-        assert self.pbs.get_integral(curve1,curve2) == 1.0
+        curve1 = [1, 1, 1]
+        curve2 = [1, 0, 1]
+        assert self.pbs.get_integral(curve1, curve2) == 1.0
 
-        curve1 = [1,1,1]
-        curve2 = [1,0,0]
-        assert self.pbs.get_integral(curve1,curve2) == 1.5
+        curve1 = [1, 1, 1]
+        curve2 = [1, 0, 0]
+        assert self.pbs.get_integral(curve1, curve2) == 1.5
 
-        curve1 = [1,1,1]
-        curve2 = [1,0,-1]
-        assert self.pbs.get_integral(curve1,curve2) == 2.0
+        curve1 = [1, 1, 1]
+        curve2 = [1, 0, -1]
+        assert self.pbs.get_integral(curve1, curve2) == 2.0
 
     def test_start(self):
         """
@@ -106,17 +90,12 @@ class TestPassbandSelector:
         """
         # for filename in os.listdir(self.data_folder_path):
         #    filepath = os.path.join(self.data_folder_path, filename)
-        extremums = {
-            "min": (0.022, 0.028),
-            "max": (0.016, 0.023)
-        }
-        selected_times = [
-            "11:35:47", "11:40:46", "11:45:37", "11:49:36", "11:54:55"
-        ]
-        (
-            sample_rate, list_times, list_ticks, list_out
-        ) = prepare_data(self.data_file_path)
-        
+        extremums = {"min": (0.022, 0.028), "max": (0.016, 0.023)}
+        selected_times = ["11:35:47", "11:40:46", "11:45:37", "11:49:36", "11:54:55"]
+        (sample_rate, list_times, list_ticks, list_out) = prepare_data(
+            self.data_file_path
+        )
+
         selected_curves = []
         index = 0
         list_indexes = []
@@ -127,8 +106,8 @@ class TestPassbandSelector:
             index += 1
         for idx in list_indexes:
             # logger.info(f"len list_out[idx]: {len(list_out[idx])}")
-            selected_curves.append(list_out[idx])     
-        
+            selected_curves.append(list_out[idx])
+
         # logger.info(f"len selected_curves: {len(selected_curves)}")
         # logger.info(f"selected_curves[0][0]: {selected_curves[0][0]}")
         self.pbs.curves = selected_curves

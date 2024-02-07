@@ -18,7 +18,7 @@ class PassbandSelector:
         fsr: int,
         max_search_range: tuple,
         min_search_range: tuple,
-        **kwargs
+        **kwargs,
     ) -> None:
         """
         Initialization of an item.
@@ -45,7 +45,7 @@ class PassbandSelector:
         if "fhlr" in kwargs:
             self.filter_high_limit_range = kwargs["fhlr"]
         if "filter_high_limit_range" in kwargs:
-            self.filter_high_limit_range = kwargs["filter_high_limit_range"]            
+            self.filter_high_limit_range = kwargs["filter_high_limit_range"]
         self.filter_high_limit_range = [int(x) for x in self.filter_high_limit_range]
         if "slf" in kwargs:
             self.step_low_filter = kwargs["slf"]
@@ -71,7 +71,7 @@ class PassbandSelector:
         if "cheb_ripple" in kwargs:
             self.cheb_ripple = kwargs["cheb_ripple"]
         self.cheb_ripple = int(self.cheb_ripple)
-        
+
         logger.info(f"TYPE: {type(self.filter_low_limit_range[0])}")
 
         self.filtered_curves = []
@@ -113,16 +113,10 @@ class PassbandSelector:
         deltas = []
         for curve in filtered_curves:
             curve_max = search_max_min(
-                self.tick_times,
-                curve,
-                self.max_search_range,
-                "max"
+                self.tick_times, curve, self.max_search_range, "max"
             )
             curve_min = search_max_min(
-                self.tick_times,
-                curve,
-                self.min_search_range,
-                "min"
+                self.tick_times, curve, self.min_search_range, "min"
             )
             deltas.append(curve_max[1] - curve_min[1])
         return sum(deltas) / len(deltas)
@@ -158,7 +152,7 @@ class PassbandSelector:
                 (lb, hb),
                 self.frequency_sample_rate,
                 self.cheb_filter_order,
-                self.cheb_ripple
+                self.cheb_ripple,
             )
             filtered_curves.append(filtered_curve)
         return filtered_curves
@@ -173,18 +167,18 @@ class PassbandSelector:
         for lb in range(
             self.filter_low_limit_range[0],
             self.filter_low_limit_range[1] + self.step_low_filter,
-            self.step_low_filter
+            self.step_low_filter,
         ):
             data_row = []
             for hb in range(
                 self.filter_high_limit_range[0],
                 self.filter_high_limit_range[1] + self.step_high_filter,
-                self.step_high_filter
+                self.step_high_filter,
             ):
                 if not head_row_created:
                     head_row.append(hb)
                 filtered_curves = self.filter_curves(lb, hb)
-                reproduct =  self.get_reproduct(filtered_curves)
+                reproduct = self.get_reproduct(filtered_curves)
                 delta_extrmums = self.get_delta_extremum(filtered_curves)
                 optimum = reproduct / delta_extrmums
                 data_row.append(optimum)
@@ -195,14 +189,10 @@ class PassbandSelector:
                 head_row_created = True
             heatmap_data.append([lb] + data_row)
         result_optimum = min(self.optimums)
-        return (
-            self.filter_by_optimum[result_optimum], heatmap_data
-        )
+        return (self.filter_by_optimum[result_optimum], heatmap_data)
 
 
-def export_data(
-    filepath: str, bandpass: list, data: list
-) -> None:
+def export_data(filepath: str, bandpass: list, data: list) -> None:
     """
     Exports data to file.
 
@@ -211,7 +201,7 @@ def export_data(
         bandpass(list): List of values of the selected bandpass filter.
         data(list): List of values of the optimality parameters.
     """
-    with open(filepath, 'a', encoding='UTF8', newline='') as f:
+    with open(filepath, "a", encoding="UTF8", newline="") as f:
         writer = csv.writer(f)
         writer.writerow(bandpass)
         writer.writerows(data)
