@@ -5,9 +5,9 @@ The EP Bandpass Filter Selector package cycles through various combinations of h
 
 ## Requirements
 
-Package require python >= 3.11.5.
+Package require python >= 3.8.
 For development require python3-venv.
-Tested on Manjaro Linux.
+Tested on Ubuntu 20.04.
 
 
 ## Installation
@@ -23,7 +23,8 @@ For development:
 ```
 $ git clone https://github.com/yaricp/ep-bandpass-filter-selector.git
 $ cd ep-bandpass-filter-selector/
-$ scripts/./install.sh
+$ cd scripts/
+$ ./install.sh
 ```
 
 `install.sh` will download and set up the necessary packages in the .venv folder.
