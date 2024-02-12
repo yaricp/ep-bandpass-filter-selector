@@ -1,3 +1,6 @@
+[![Run check format lint and unittests](https://github.com/yaricp/ep-bandpass-filter-selector/actions/workflows/py38-test-actions.yml/badge.svg)](https://github.com/yaricp/ep-bandpass-filter-selector/actions/workflows/py38-test-actions.yml)
+
+
 # ep-bandpass-filter-selector
 
 The EP Bandpass Filter Selector package cycles through various combinations of high- and low-pass cutoffs of the bandpass frequency filter within user-specified limits and selects the optimal filtering option. Optimization is carried out basing on the ratio of the EP interpeak amplitude to the EP curves variability coefficient.
