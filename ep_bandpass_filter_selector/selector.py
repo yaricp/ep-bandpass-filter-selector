@@ -23,6 +23,8 @@ class PassbandSelector:
         """
         Initialization of an item.
         """
+
+        logger.info(f"kwargs: {kwargs}")
         self.filter_low_limit_range = 1, 30
         self.step_low_filter = 1
         self.filter_high_limit_range = 100, 500
@@ -35,11 +37,25 @@ class PassbandSelector:
         
         self.p2p_coeff_functions = {
             "p2p_abs": self.get_delta_extremum,
-            "p2p_rel": self.p2p_coeff_by_main_region
+            "p2p_rel": self.p2p_coeff_by_base_region
+        }
+        self.p2p_coeff_functions_parameters = {
+            "p2p_rel": [
+                {
+                    "name": "base_region",
+                    "type": "tuple",
+                    "value": "0.01, 0.03"
+                }
+            ],
+            "p2p_abs": []
         }
         self.curve_variability_coeff_functions = {
             "curve_variability": self.get_reproduct,
             "peak_variability": self.get_peak_reproduct
+        }
+        self.curve_variability_coeff_functions_parameters = {
+            "curve_variability": [],
+            "peak_variability": []
         }
 
         self.curves = curves
@@ -107,8 +123,8 @@ class PassbandSelector:
             self.curve_variability_coeff_variant
         ]
 
-        # logger.info(f"self.max_search_range: {self.max_search_range}")
-        # logger.info(f"self.tick_times: {self.tick_times}")
+        logger.info(f"self.get_p2p_coeff: {self.get_p2p_coeff}")
+        logger.info(f"self.get_curve_var_coeff: {self.get_curve_var_coeff}")
         logger.info(
             f"TYPE: {type(self.filter_low_limit_range[0])}"
         )
@@ -182,10 +198,11 @@ class PassbandSelector:
             logger.error(f"Error: {err}")
         return result
 
-    def p2p_coeff_by_main_region(
-        self, filtered_curves: list, main_region: list
+    def p2p_coeff_by_base_region(
+        self, filtered_curves: list
     ) -> float:
         """get p2p by main region"""
+        logger.info("start p2p_coeff_by_base_region")
         coeff_rel = []
         for curve in filtered_curves:
             curve_max = search_max_min(
