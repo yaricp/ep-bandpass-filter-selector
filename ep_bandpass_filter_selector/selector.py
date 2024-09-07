@@ -144,7 +144,9 @@ class PassbandSelector:
         max_time = min_time_extremums * 2 / 3
         return (min_time, max_time)
 
-    def get_reproduct(self, filtered_curves: list) -> float:
+    def get_reproduct(
+        self, filtered_curves: list, av_amp_pn: float = 0
+    ) -> float:
         """
         Calculates the average reproducibility of the filtered curves.
 
@@ -168,9 +170,44 @@ class PassbandSelector:
         #     ave_integral = self.get_square_mean(integrals)
         return ave_integral
 
-    def get_peak_reproduct(self, filtered_curves: list) -> float:
+    def get_peak_reproduct(
+        self, filtered_curves: list, av_amp_pn: float
+    ) -> float:
         """get reproduct by peaks """
-        pass
+        av_lat_p_list = []
+        av_lat_n_list = []
+        # av_amp_pn_list = []
+        for curve in filtered_curves:
+            curve_max = search_max_min(
+                self.tick_times, curve, self.max_search_range, "max"
+            )
+            curve_min = search_max_min(
+                self.tick_times, curve, self.min_search_range, "min"
+            )
+            av_lat_p_list.append(curve_max[0])
+            av_lat_n_list.append(curve_min[0])
+            # av_amp_pn_list.append(curve_max[0] - curve_min[0])
+        av_lat_p = sum(av_lat_p_list) / len(filtered_curves)
+        av_lat_n = sum(av_lat_n_list) / len(filtered_curves)
+        # av_amp_pn = sum(av_amp_pn_list) / len(filtered_curves)
+        dev_sum_list = []
+        for curve in filtered_curves:
+            curve_max = search_max_min(
+                self.tick_times, curve, self.max_search_range, "max"
+            )
+            curve_min = search_max_min(
+                self.tick_times, curve, self.min_search_range, "min"
+            )
+            lat_p = curve_max[0]
+            lat_n = curve_min[0]
+            amp_pn = abs(curve_max[1] - curve_min[1])
+            dev_lat_p = 100 * (lat_p - av_lat_p) / av_lat_p
+            dev_lat_n = 100 * (lat_n - av_lat_n) / av_lat_n
+            dev_amp_pn = 100 * (amp_pn - av_amp_pn) / av_amp_pn
+            dev_sum = abs(dev_lat_p) + abs(dev_lat_n) + abs(dev_amp_pn)
+            dev_sum_list.append(dev_sum)
+        psc = sum(dev_sum_list) / len(filtered_curves)
+        return psc
 
     def get_delta_extremum(self, filtered_curves: list) -> float:
         """
@@ -293,20 +330,19 @@ class PassbandSelector:
                 if not head_row_created:
                     head_row.append(hb)
                 filtered_curves = self.filter_curves(lb, hb)
-                # logger.info(f"filtered_curves: {filtered_curves}")
-                # reproduct = self.get_reproduct(filtered_curves)
-                reproduct = self.get_curve_var_coeff(filtered_curves)
-                # delta_extremums = self.get_delta_extremum(filtered_curves)
-                delta_extremums = self.get_p2p_coeff(filtered_curves)
-                optimum = reproduct / delta_extremums
-                data_row.append(optimum)
-                self.optimums.append(optimum)
-                self.filter_by_optimum[optimum] = (lb, hb)
+                av_amp_pn = self.get_p2p_coeff(filtered_curves)
+                cvc = self.get_curve_var_coeff(
+                    filtered_curves, av_amp_pn
+                )
+                optimality_coefficient = av_amp_pn / cvc
+                data_row.append(optimality_coefficient)
+                self.optimums.append(optimality_coefficient)
+                self.filter_by_optimum[optimality_coefficient] = (lb, hb)
             if not head_row_created:
                 heatmap_data.append(["-"] + head_row)
                 head_row_created = True
             heatmap_data.append([lb] + data_row)
-        result_optimum = min(self.optimums)
+        result_optimum = max(self.optimums)
         return (self.filter_by_optimum[result_optimum], heatmap_data)
 
 
