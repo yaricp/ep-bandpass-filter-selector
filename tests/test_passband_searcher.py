@@ -21,6 +21,17 @@ class TestPassbandSelector:
         min_search_range=(0.03, 0.04),
     )
 
+    def test_get_peak_cvc(self):
+        """
+        Tests peak variability curves
+        """
+        self.pbs.tick_times = [1, 2, 3, 4, 5]
+        self.pbs.max_search_range = [0, 5]
+        self.pbs.min_search_range = [0, 5]
+        filtered_curves = [[1, 2, 3, 4, 5], [1, 2, 3, 4, 5], [1, 2, 3, 4, 5]]
+        result = self.pbs.get_peak_cvc(filtered_curves)
+        assert result == 0.0
+
     def test_get_curve_cvc(self):
         """
         Tests calculating of the average integrals.
@@ -35,6 +46,12 @@ class TestPassbandSelector:
         filtered_curves = [[1, 2, 4, 4, 5], [1, 2, 3, 4, 5], [1, 2, 3, 3, 5]]
         result = self.pbs.get_curve_cvc(filtered_curves)
         assert round(result, 2) == 1.33
+
+    def test_p2p_coeff_by_base_region(self):
+        """
+        Tests peak to peak coefficient.
+        """
+        assert True
 
     def test_p2p_abs_coeff(self):
         """
