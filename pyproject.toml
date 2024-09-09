@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ep-bandpass-filter-selector"
-version = "0.0.3"
+version = "0.0.4"
 description = "The EP Bandpass Filter Selector package cycles through various combinations of high- and low-pass cutoffs of the bandpass frequency filter within user-specified limits and selects the optimal filtering option. Optimization is carried out basing on the ratio of the EP interpeak amplitude to the EP curves variability coefficient."
 authors = ["Yaricp Pisarev <yaricp@gmail.com>"]
 readme = "README.md"
