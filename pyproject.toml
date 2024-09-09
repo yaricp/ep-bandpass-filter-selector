@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ep-bandpass-filter-selector"
-version = "0.1.0"
+version = "0.2.0"
 description = ""
 authors = ["Yaricp Pisarev <yaricp@gmail.com>"]
 readme = "README.md"
