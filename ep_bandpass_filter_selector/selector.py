@@ -171,7 +171,7 @@ class PassbandSelector:
         return ave_integral
 
     def get_peak_cvc(
-        self, filtered_curves: list, av_amp_pn: float
+        self, filtered_curves: list
     ) -> float:
         """get reproduct by peaks CVC"""
         av_lat_p_list = []
