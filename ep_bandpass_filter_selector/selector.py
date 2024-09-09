@@ -173,10 +173,10 @@ class PassbandSelector:
     def get_peak_reproduct(
         self, filtered_curves: list, av_amp_pn: float
     ) -> float:
-        """get reproduct by peaks """
+        """get reproduct by peaks CVC"""
         av_lat_p_list = []
         av_lat_n_list = []
-        # av_amp_pn_list = []
+        av_amp_pn_cvc_list = []
         for curve in filtered_curves:
             curve_max = search_max_min(
                 self.tick_times, curve, self.max_search_range, "max"
@@ -186,10 +186,10 @@ class PassbandSelector:
             )
             av_lat_p_list.append(curve_max[0])
             av_lat_n_list.append(curve_min[0])
-            # av_amp_pn_list.append(curve_max[0] - curve_min[0])
+            av_amp_pn_cvc_list.append(curve_max[1] - curve_min[1])
         av_lat_p = sum(av_lat_p_list) / len(filtered_curves)
         av_lat_n = sum(av_lat_n_list) / len(filtered_curves)
-        # av_amp_pn = sum(av_amp_pn_list) / len(filtered_curves)
+        av_amp_cvc_pn = sum(av_amp_pn_cvc_list) / len(filtered_curves)
         dev_sum_list = []
         for curve in filtered_curves:
             curve_max = search_max_min(
@@ -201,9 +201,9 @@ class PassbandSelector:
             lat_p = curve_max[0]
             lat_n = curve_min[0]
             amp_pn = abs(curve_max[1] - curve_min[1])
-            dev_lat_p = 100 * (lat_p - av_lat_p) / av_lat_p
-            dev_lat_n = 100 * (lat_n - av_lat_n) / av_lat_n
-            dev_amp_pn = 100 * (amp_pn - av_amp_pn) / av_amp_pn
+            dev_lat_p = 100 * abs(lat_p - av_lat_p) / av_lat_p
+            dev_lat_n = 100 * abs(lat_n - av_lat_n) / av_lat_n
+            dev_amp_pn = 100 * abs(amp_pn - av_amp_cvc_pn) / av_amp_cvc_pn
             dev_sum = abs(dev_lat_p) + abs(dev_lat_n) + abs(dev_amp_pn)
             dev_sum_list.append(dev_sum)
         psc = sum(dev_sum_list) / len(filtered_curves)
