@@ -331,9 +331,7 @@ class PassbandSelector:
                     head_row.append(hb)
                 filtered_curves = self.filter_curves(lb, hb)
                 av_amp_pn = self.get_p2p_coeff(filtered_curves)
-                cvc = self.get_curve_var_coeff(
-                    filtered_curves, av_amp_pn
-                )
+                cvc = self.get_curve_var_coeff(filtered_curves)
                 optimality_coefficient = av_amp_pn / cvc
                 data_row.append(optimality_coefficient)
                 self.optimums.append(optimality_coefficient)
