@@ -21,7 +21,7 @@ class TestPassbandSelector:
         min_search_range=(0.03, 0.04),
     )
 
-    def test_get_reproduct(self):
+    def test_get_curve_cvc(self):
         """
         Tests calculating of the average integrals.
         """
@@ -29,14 +29,14 @@ class TestPassbandSelector:
         self.pbs.max_search_range = [0, 5]
         self.pbs.min_search_range = [0, 5]
         filtered_curves = [[1, 2, 3, 4, 5], [1, 2, 3, 4, 5], [1, 2, 3, 4, 5]]
-        result = self.pbs.get_reproduct(filtered_curves)
+        result = self.pbs.get_curve_cvc(filtered_curves)
         assert result == 0.0
 
         filtered_curves = [[1, 2, 4, 4, 5], [1, 2, 3, 4, 5], [1, 2, 3, 3, 5]]
-        result = self.pbs.get_reproduct(filtered_curves)
+        result = self.pbs.get_curve_cvc(filtered_curves)
         assert round(result, 2) == 1.33
 
-    def test_get_delta_extremum(self):
+    def test_p2p_abs_coeff(self):
         """
         Tests calculating the average difference extrema.
         """
@@ -45,11 +45,11 @@ class TestPassbandSelector:
         self.pbs.min_search_range = [0, 5]
 
         filtered_curves = [[1, 1, 2, 0, 1], [0, 0, -2, 0, 0], [1, 1, -1, 1, 1]]
-        result = self.pbs.get_delta_extremum(filtered_curves)
+        result = self.pbs.p2p_abs_coeff(filtered_curves)
         assert result == 2.0
 
         filtered_curves = [[1, 1, 2, 0, 1], [1, 2, 4, 0, 1], [1, 2, 6, 0, 1]]
-        result = self.pbs.get_delta_extremum(filtered_curves)
+        result = self.pbs.p2p_abs_coeff(filtered_curves)
         assert result == 4.0
 
     def test_get_integral(self):
