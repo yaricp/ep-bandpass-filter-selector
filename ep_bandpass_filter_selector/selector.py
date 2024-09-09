@@ -36,7 +36,7 @@ class PassbandSelector:
         self.curve_variability_coeff_variant = "curve_variability"
         
         self.p2p_coeff_functions = {
-            "p2p_abs": self.get_delta_extremum,
+            "p2p_abs": self.p2p_abs_coeff,
             "p2p_rel": self.p2p_coeff_by_base_region
         }
         self.p2p_coeff_functions_parameters = {
@@ -50,8 +50,8 @@ class PassbandSelector:
             "p2p_abs": []
         }
         self.curve_variability_coeff_functions = {
-            "curve_variability": self.get_reproduct,
-            "peak_variability": self.get_peak_reproduct
+            "curve_variability": self.get_curve_cvc,
+            "peak_variability": self.get_peak_cvc
         }
         self.curve_variability_coeff_functions_parameters = {
             "curve_variability": [],
@@ -144,7 +144,7 @@ class PassbandSelector:
         max_time = min_time_extremums * 2 / 3
         return (min_time, max_time)
 
-    def get_reproduct(
+    def get_curve_cvc(
         self, filtered_curves: list, av_amp_pn: float = 0
     ) -> float:
         """
@@ -170,7 +170,7 @@ class PassbandSelector:
         #     ave_integral = self.get_square_mean(integrals)
         return ave_integral
 
-    def get_peak_reproduct(
+    def get_peak_cvc(
         self, filtered_curves: list, av_amp_pn: float
     ) -> float:
         """get reproduct by peaks CVC"""
@@ -209,7 +209,7 @@ class PassbandSelector:
         psc = sum(dev_sum_list) / len(filtered_curves)
         return psc
 
-    def get_delta_extremum(self, filtered_curves: list) -> float:
+    def p2p_abs_coeff(self, filtered_curves: list) -> float:
         """
         Calculates the average difference in extrema for the list
         of filtered curves.
@@ -220,7 +220,7 @@ class PassbandSelector:
         Returns:
             (float): The average difference in extrema.
         """
-        deltas = []
+        amp_pn_list = []
         for curve in filtered_curves:
             curve_max = search_max_min(
                 self.tick_times, curve, self.max_search_range, "max"
@@ -228,12 +228,12 @@ class PassbandSelector:
             curve_min = search_max_min(
                 self.tick_times, curve, self.min_search_range, "min"
             )
-            deltas.append(curve_max[1] - curve_min[1])
+            amp_pn_list.append(curve_max[1] - curve_min[1])
         try:
-            result = sum(deltas) / len(deltas)
+            av_amp_pn = sum(amp_pn_list) / len(amp_pn_list)
         except Exception as err:
             logger.error(f"Error: {err}")
-        return result
+        return av_amp_pn
 
     def p2p_coeff_by_base_region(
         self, filtered_curves: list
