@@ -19,7 +19,6 @@ jobs:
       - name: run test format code
         run: |
           .venv/bin/poetry run ruff check .
-          # .venv/bin/poetry run ruff format .
       - name: run unittests
         run: |
           .venv/bin/poetry run pytest

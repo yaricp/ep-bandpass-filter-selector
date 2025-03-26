@@ -12,7 +12,9 @@ jobs:
       packages: write
     steps:
       - name: install dependencies
-        run: bash -c ./scripts/./install.sh
+        run: |
+          ls -a;
+          bash -c ./scripts/./install.sh;
       - name: run linters
         run: |
           .venv/bin/poetry run flake8 ep_bandpass_filter_selector/selector.py

@@ -10,9 +10,4 @@ python3 -m venv .venv
 
 .venv/bin/pip3 install pip --upgrade
 .venv/bin/pip3 install poetry
-
-# export PATH=$PATH:.venv/bin
-# echo 'export PATH="$PATH:/.venv/bin"' >> ~/.bashrc
-
-
 .venv/bin/poetry install
