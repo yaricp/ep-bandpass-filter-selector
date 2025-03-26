@@ -37,7 +37,7 @@ jobs:
           ls -a;
           bash -c ./scripts/./install.sh;
       - name: build package
-        run: poetry build
+        run: .venv/bin/poetry build
       - name: Publish package
         uses: code-specialist/pypi-poetry-publish@v1
         with:
