@@ -2,7 +2,7 @@ name: Run check format lint and unittests
 on:
   push:
     branches:
-      - dev
+      - main
 
 jobs:
   run-linters-unittests:
@@ -32,6 +32,10 @@ jobs:
       packages: write
     steps:
       - uses: actions/checkout@v2
+      - name: install dependencies
+        run: |
+          ls -a;
+          bash -c ./scripts/./install.sh;
       - name: build package
         run: poetry build
       - name: Publish package

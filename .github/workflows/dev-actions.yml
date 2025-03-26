@@ -24,4 +24,25 @@ jobs:
         run: |
           .venv/bin/poetry run pytest
 
-
+  build_public_package:
+    needs: run-linters-unittests
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v2
+      - name: install dependencies
+        run: |
+          ls -a;
+          bash -c ./scripts/./install.sh;
+      - name: build package
+        run: poetry build
+      - name: Publish package
+        uses: code-specialist/pypi-poetry-publish@v1
+        with:
+          PACKAGE_DIRECTORY: './'
+          PYTHON_VERSION: '3.12'
+          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          PUBLISH_REGISTRY_PASSWORD: ${{ secrets.PYPI_TOKEN }}
+          PUBLISH_REGISTRY: 'https://test.pypi.org/simple/'
