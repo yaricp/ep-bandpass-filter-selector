@@ -1,3 +1,6 @@
+[![Run check format lint and unittests](https://github.com/yaricp/ep-bandpass-filter-selector/actions/workflows/py38-test-actions.yml/badge.svg)](https://github.com/yaricp/ep-bandpass-filter-selector/actions/workflows/py38-test-actions.yml)
+
+
 # ep-bandpass-filter-selector
 
 The EP Bandpass Filter Selector package cycles through various combinations of high- and low-pass cutoffs of the bandpass frequency filter within user-specified limits and selects the optimal filtering option. Optimization is carried out basing on the ratio of the EP interpeak amplitude to the EP curves variability coefficient.
@@ -5,9 +8,9 @@ The EP Bandpass Filter Selector package cycles through various combinations of h
 
 ## Requirements
 
-Package require python >= 3.11.5.
+Package require python >= 3.8.
 For development require python3-venv.
-Tested on Manjaro Linux.
+Tested on Ubuntu 20.04.
 
 
 ## Installation
@@ -23,7 +26,8 @@ For development:
 ```
 $ git clone https://github.com/yaricp/ep-bandpass-filter-selector.git
 $ cd ep-bandpass-filter-selector/
-$ scripts/./install.sh
+$ cd scripts/
+$ ./install.sh
 ```
 
 `install.sh` will download and set up the necessary packages in the .venv folder.

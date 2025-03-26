@@ -1,0 +1,24 @@
+name: Run check format lint and unittests
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  run-linters-unittests:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: install dependencies
+        run: bash -c ./scripts/./install.sh
+      - name: run linters
+        run: |
+          .venv/bin/poetry run flake8 ep_bandpass_filter_selector/selector.py
+          .venv/bin/poetry run ruff ep_bandpass_filter_selector/selector.py
+      - name: run unittests
+        run: |
+          .venv/bin/poetry run pytest
+
+
