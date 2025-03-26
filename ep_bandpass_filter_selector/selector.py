@@ -25,16 +25,16 @@ class PassbandSelector:
         """
 
         logger.info(f"kwargs: {kwargs}")
-        self.filter_low_limit_range = 1, 30
+        self.filter_low_limit_range = [1, 30]
         self.step_low_filter = 1
-        self.filter_high_limit_range = 100, 500
+        self.filter_high_limit_range = [100, 500]
         self.step_high_filter = 10
         self.type_mean = "average"
         self.cheb_filter_order = 3
         self.cheb_ripple = 3
         self.p2p_coeff_variant = "p2p_abs"
         self.curve_variability_coeff_variant = "curve_variability"
-        
+
         self.p2p_coeff_functions = {
             "p2p_abs": self.p2p_abs_coeff,
             "p2p_rel": self.p2p_coeff_by_base_region
@@ -80,14 +80,18 @@ class PassbandSelector:
         if "fllr" in kwargs:
             self.filter_low_limit_range = kwargs["fllr"]
         if "filter_low_limit_range" in kwargs:
-            self.filter_low_limit_range = kwargs["filter_low_limit_range"]
+            self.filter_low_limit_range = kwargs[
+                "filter_low_limit_range"
+            ]
         self.filter_low_limit_range = [
             int(x) for x in self.filter_low_limit_range
         ]
         if "fhlr" in kwargs:
             self.filter_high_limit_range = kwargs["fhlr"]
         if "filter_high_limit_range" in kwargs:
-            self.filter_high_limit_range = kwargs["filter_high_limit_range"]
+            self.filter_high_limit_range = kwargs[
+                "filter_high_limit_range"
+            ]
         self.filter_high_limit_range = [
             int(x) for x in self.filter_high_limit_range
         ]
@@ -115,6 +119,12 @@ class PassbandSelector:
         if "cheb_ripple" in kwargs:
             self.cheb_ripple = kwargs["cheb_ripple"]
         self.cheb_ripple = int(self.cheb_ripple)
+        self.w_lat = 5
+        if "w_lat" in kwargs:
+            self.w_lat = int(kwargs["w_lat"])
+        self.w_amp = 1
+        if "w_amp" in kwargs:
+            self.w_amp = int(kwargs["w_amp"])
 
         self.get_p2p_coeff = self.p2p_coeff_functions[
             self.p2p_coeff_variant
@@ -166,12 +176,10 @@ class PassbandSelector:
                 ave_integral = sum(integrals) / len(integrals)
             except Exception as err:
                 logger.error(f"Error: {err}")
-        # elif self.check_square:
-        #     ave_integral = self.get_square_mean(integrals)
         return ave_integral
 
     def get_peak_cvc(
-        self, filtered_curves: list, av_amp_pn: float
+        self, filtered_curves: list
     ) -> float:
         """get reproduct by peaks CVC"""
         av_lat_p_list = []
@@ -204,7 +212,9 @@ class PassbandSelector:
             dev_lat_p = 100 * abs(lat_p - av_lat_p) / av_lat_p
             dev_lat_n = 100 * abs(lat_n - av_lat_n) / av_lat_n
             dev_amp_pn = 100 * abs(amp_pn - av_amp_cvc_pn) / av_amp_cvc_pn
-            dev_sum = abs(dev_lat_p) + abs(dev_lat_n) + abs(dev_amp_pn)
+            dev_sum = 0.5 * self.w_lat * (
+                abs(dev_lat_p) + abs(dev_lat_n)
+            ) + self.w_amp * abs(dev_amp_pn)
             dev_sum_list.append(dev_sum)
         psc = sum(dev_sum_list) / len(filtered_curves)
         return psc
@@ -290,10 +300,6 @@ class PassbandSelector:
         Returns:
             (list): list of values from the filtered curve.
         """
-        # logger.info("start filter_curves")
-        # logger.info(f"self.frequency_sample_rate: {self.frequency_sample_rate}")
-        # logger.info(f"self.cheb_filter_order: {self.cheb_filter_order}")
-        # logger.info(f"self.cheb_ripple: {self.cheb_ripple}")
         filtered_curves = []
         for curve in self.curves:
             filtered_curve = make_filter(
@@ -331,9 +337,7 @@ class PassbandSelector:
                     head_row.append(hb)
                 filtered_curves = self.filter_curves(lb, hb)
                 av_amp_pn = self.get_p2p_coeff(filtered_curves)
-                cvc = self.get_curve_var_coeff(
-                    filtered_curves, av_amp_pn
-                )
+                cvc = self.get_curve_var_coeff(filtered_curves)
                 optimality_coefficient = av_amp_pn / cvc
                 data_row.append(optimality_coefficient)
                 self.optimums.append(optimality_coefficient)
