@@ -78,22 +78,22 @@ class PassbandSelector:
         if "base_region" in kwargs and kwargs["base_region"] != ():
             self.base_region = kwargs["base_region"]
         if "fllr" in kwargs:
-            self.filter_low_limit_range_income = kwargs["fllr"]
+            self.filter_low_limit_range = kwargs["fllr"]
         if "filter_low_limit_range" in kwargs:
-            self.filter_low_limit_range_income = kwargs[
+            self.filter_low_limit_range = kwargs[
                 "filter_low_limit_range"
             ]
         self.filter_low_limit_range = [
-            int(x) for x in self.filter_low_limit_range_income
+            int(x) for x in self.filter_low_limit_range
         ]
         if "fhlr" in kwargs:
-            self.filter_high_limit_range_income = kwargs["fhlr"]
+            self.filter_high_limit_range = kwargs["fhlr"]
         if "filter_high_limit_range" in kwargs:
-            self.filter_high_limit_range_income = kwargs[
+            self.filter_high_limit_range = kwargs[
                 "filter_high_limit_range"
             ]
         self.filter_high_limit_range = [
-            int(x) for x in self.filter_high_limit_range_income
+            int(x) for x in self.filter_high_limit_range
         ]
         if "slf" in kwargs:
             self.step_low_filter = kwargs["slf"]
