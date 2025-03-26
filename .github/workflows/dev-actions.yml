@@ -1,4 +1,4 @@
-name: Run check format lint and unittests
+name: Run check format lint, unittests and test publication package
 on:
   push:
     branches:
@@ -24,7 +24,7 @@ jobs:
         run: |
           .venv/bin/poetry run pytest
 
-  build_public_package:
+  test_build_public_package:
     needs: run-linters-unittests
     runs-on: ubuntu-latest
     permissions:
@@ -32,12 +32,6 @@ jobs:
       packages: write
     steps:
       - uses: actions/checkout@v2
-      - name: install dependencies
-        run: |
-          ls -a;
-          bash -c ./scripts/./install.sh;
-      - name: build package
-        run: .venv/bin/poetry build
       - name: Build and publish to pypi
         uses: JRubics/poetry-publish@v2.1
         with:

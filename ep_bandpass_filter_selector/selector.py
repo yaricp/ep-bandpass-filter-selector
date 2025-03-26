@@ -25,9 +25,9 @@ class PassbandSelector:
         """
 
         logger.info(f"kwargs: {kwargs}")
-        self.filter_low_limit_range = 1, 30
+        self.filter_low_limit_range = [1, 30]
         self.step_low_filter = 1
-        self.filter_high_limit_range = 100, 500
+        self.filter_high_limit_range = [100, 500]
         self.step_high_filter = 10
         self.type_mean = "average"
         self.cheb_filter_order = 3
@@ -78,18 +78,22 @@ class PassbandSelector:
         if "base_region" in kwargs and kwargs["base_region"] != ():
             self.base_region = kwargs["base_region"]
         if "fllr" in kwargs:
-            self.filter_low_limit_range = kwargs["fllr"]
+            self.filter_low_limit_range_income = kwargs["fllr"]
         if "filter_low_limit_range" in kwargs:
-            self.filter_low_limit_range = kwargs["filter_low_limit_range"]
+            self.filter_low_limit_range_income = kwargs[
+                "filter_low_limit_range"
+            ]
         self.filter_low_limit_range = [
-            int(x) for x in self.filter_low_limit_range
+            int(x) for x in self.filter_low_limit_range_income
         ]
         if "fhlr" in kwargs:
-            self.filter_high_limit_range = kwargs["fhlr"]
+            self.filter_high_limit_range_income = kwargs["fhlr"]
         if "filter_high_limit_range" in kwargs:
-            self.filter_high_limit_range = kwargs["filter_high_limit_range"]
+            self.filter_high_limit_range_income = kwargs[
+                "filter_high_limit_range"
+            ]
         self.filter_high_limit_range = [
-            int(x) for x in self.filter_high_limit_range
+            int(x) for x in self.filter_high_limit_range_income
         ]
         if "slf" in kwargs:
             self.step_low_filter = kwargs["slf"]
@@ -115,6 +119,12 @@ class PassbandSelector:
         if "cheb_ripple" in kwargs:
             self.cheb_ripple = kwargs["cheb_ripple"]
         self.cheb_ripple = int(self.cheb_ripple)
+        self.w_lat = 5
+        if "w_lat" in kwargs:
+            self.w_lat = int(kwargs["w_lat"])
+        self.w_amp = 1
+        if "w_amp" in kwargs:
+            self.w_amp = int(kwargs["w_amp"])
 
         self.get_p2p_coeff = self.p2p_coeff_functions[
             self.p2p_coeff_variant
@@ -202,7 +212,9 @@ class PassbandSelector:
             dev_lat_p = 100 * abs(lat_p - av_lat_p) / av_lat_p
             dev_lat_n = 100 * abs(lat_n - av_lat_n) / av_lat_n
             dev_amp_pn = 100 * abs(amp_pn - av_amp_cvc_pn) / av_amp_cvc_pn
-            dev_sum = 2 * abs(dev_lat_p) + 2 * abs(dev_lat_n) + abs(dev_amp_pn)
+            dev_sum = 0.5 * self.w_lat * (
+                abs(dev_lat_p) + abs(dev_lat_n)
+            ) + self.w_amp * abs(dev_amp_pn)
             dev_sum_list.append(dev_sum)
         psc = sum(dev_sum_list) / len(filtered_curves)
         return psc
