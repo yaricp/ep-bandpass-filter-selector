@@ -38,11 +38,9 @@ jobs:
           bash -c ./scripts/./install.sh;
       - name: build package
         run: .venv/bin/poetry build
-      - name: Publish package
-        uses: code-specialist/pypi-poetry-publish@v1
+      - name: Build and publish to pypi
+        uses: JRubics/poetry-publish@v2.1
         with:
-          PACKAGE_DIRECTORY: './'
-          PYTHON_VERSION: '3.12'
-          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-          PUBLISH_REGISTRY_PASSWORD: ${{ secrets.PYPI_TOKEN }}
-          PUBLISH_REGISTRY: 'https://test.pypi.org/simple/'
+          pypi_token: ${{ secrets.PYPI_TOKEN }}
+          repository_name: "test-ep-bandpass-filter-selector"
+          repository_url: "https://test.pypi.org/legacy/"
