@@ -3,7 +3,7 @@ import numpy as np
 from itertools import combinations
 from loguru import logger
 
-from eeg_filters.filters import make_filter, search_max_min
+from eeg_filters.filters import apply_filter, search_max_min
 
 
 class PassbandSelector:
@@ -302,7 +302,7 @@ class PassbandSelector:
         """
         filtered_curves = []
         for curve in self.curves:
-            filtered_curve = make_filter(
+            filtered_curve = apply_filter(
                 curve,
                 [lb, hb],
                 self.frequency_sample_rate,
