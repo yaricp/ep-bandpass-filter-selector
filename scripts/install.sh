@@ -10,4 +10,5 @@ python3 -m venv .venv
 
 .venv/bin/pip3 install pip --upgrade
 .venv/bin/pip3 install poetry
+.venv/bin/poetry lock
 .venv/bin/poetry install
