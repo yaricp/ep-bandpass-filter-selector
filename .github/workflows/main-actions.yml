@@ -33,6 +33,4 @@ jobs:
         uses: JRubics/poetry-publish@v2.1
         with:
           pypi_token: ${{ secrets.PYPI_TOKEN }}
-          repository_name: "ep-bandpass-filter-selector"
-          repository_url: "https://pypi.org/legacy/"
 
