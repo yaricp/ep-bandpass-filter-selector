@@ -105,20 +105,22 @@ tests = ["pytest", "pytest-cov", "pytest-xdist"]
 
 [[package]]
 name = "eeg-filters"
-version = "0.0.7"
+version = "0.0.8"
 description = "Package for filtering EEG signals and EP (evoked potentials)."
 optional = false
-python-versions = ">=3.6"
+python-versions = "<4.0,>=3.12"
 groups = ["main"]
 files = [
-    {file = "eeg_filters-0.0.7-py3-none-any.whl", hash = "sha256:f0bb6068016fe165a6794ff2827f2d9d92427c94301817207eea51416bf89d88"},
-    {file = "eeg_filters-0.0.7.tar.gz", hash = "sha256:e6007dd87b9a2f7f808f3306f03cb47ff5d68976a6fbad755dbcc06e5d651a5a"},
+    {file = "eeg_filters-0.0.8-py3-none-any.whl", hash = "sha256:9863635d5c91468e6cdc60ec9dcc9c3bdd24e824de7b2e9d727d9b9f75430354"},
+    {file = "eeg_filters-0.0.8.tar.gz", hash = "sha256:6fba58136aa1c4adaa916f960097ac44faac9e1e534932c1b85006a487ebb96d"},
 ]
 
 [package.dependencies]
-matplotlib = ">=3.1"
-numpy = ">=1.18"
-scipy = ">=1.4"
+loguru = ">=0.7.3,<0.8.0"
+matplotlib = ">=3.10.1,<4.0.0"
+numpy = ">=2.2.4,<3.0.0"
+pyedflib = ">=0.1.40,<0.2.0"
+scipy = ">=1.15.2,<2.0.0"
 
 [[package]]
 name = "flake8"
@@ -597,6 +599,20 @@ files = [
 ]
 
 [[package]]
+name = "pyedflib"
+version = "0.1.40"
+description = "library to read/write EDF+/BDF+ files"
+optional = false
+python-versions = "*"
+groups = ["main"]
+files = [
+    {file = "pyedflib-0.1.40.tar.gz", hash = "sha256:07136a33fc6c166e6b68a8d95ac77d2cb14aedf971d077a73d95a796975cc12b"},
+]
+
+[package.dependencies]
+numpy = ">=1.9.1"
+
+[[package]]
 name = "pyflakes"
 version = "3.2.0"
 description = "passive checker of Python programs"
@@ -781,4 +797,4 @@ dev = ["black (>=19.3b0) ; python_version >= \"3.6\"", "pytest (>=4.6.2)"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.12"
-content-hash = "e4b6d8fcb6cf98822625d9b0aacfcfca1e45cc54d8ce44bda00377c130927823"
+content-hash = "c1bdeb89d74f19f7eedfc9c3f6a950793d826c055176bf12caa9b87968ffd7df"
